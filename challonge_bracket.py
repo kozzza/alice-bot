@@ -43,7 +43,7 @@ class ChallongeTourney():
 		challonge.matches.update(tournament=self.url, match_id=match_id, winner_id=winner, scores_csv=scores_csv)
 
 	def finalize(self):
-		challonge.api.fetch('POST', f'tournaments/{self.url}/finalize')
+		challonge.tournaments.finalize(tournament=self.url)
 
 	def delete(self):
 		challonge.tournaments.destroy(tournament=self.url)

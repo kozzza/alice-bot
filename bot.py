@@ -25,7 +25,6 @@ class DiscordTournament():
             arguments[arg[0]] = arg[1]
 
         self.game = arguments['game']
-        print(self.game)
 
     async def user_reaction_on_message(self, desired_reactions, desired_users):
         def check(reaction, user):
@@ -58,7 +57,7 @@ class DiscordTournament():
         cache_messages = await self.channel.fetch_message(bot_tournament_start_message.id)
         self.members = [member async for member in cache_messages.reactions[0].users()][1:]
 
-        if len(self.members) < 1:
+        if len(self.members) < 2:
             bot_insufficient_players_message = await self.channel.send(f'*Need more players to start the tournament, restarting...*')
             await asyncio.sleep(3)
             await bot_tournament_start_message.delete()
@@ -145,7 +144,7 @@ class DiscordTournament():
             bot_messages = []
             matches_block = []
             matches = tournament.fetch_matches(match_state='open')
-            matches_players = [[match["player1-id"], match["player2-id"]] for match in matches]
+            matches_players = [[match["player1_id"], match["player2_id"]] for match in matches]
 
             await self.channel.send(f'__**ROUND {round_count+1}:**__')
 
@@ -247,7 +246,7 @@ async def on_message(message):
                     if inspect.isclass(command_destination):
                         try:
                             command_object = command_destination(message)
-                            # await command_object.prompt_tournament()
+                            await command_object.prompt_tournament()
                         except IndexError as e:
                             await message.channel.send('Game not specified, please try again.')
                     else:
