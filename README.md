@@ -1,4 +1,6 @@
 # alice
+[![forthebadge made-with-python](http://ForTheBadge.com/images/badges/made-with-python.svg)](https://www.python.org/)
+
 A tournament bot for discord servers.
 
 ## Purpose
