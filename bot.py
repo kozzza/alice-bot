@@ -217,6 +217,7 @@ class DiscordTournament():
 @ client.event
 async def on_ready():
     print(f'We have logged in as {client.user}')
+    await client.change_presence(activity=discord.Game(name="!help"))
 
 async def ping(message):
     await message.channel.send(f'Pong :ping_pong:  |  {client.latency} ms')
@@ -231,7 +232,7 @@ async def get_help(message):
 async def on_message(message):
         print(f'{message.channel}: {message.author}: {message.author.name}: {message.content}')
         if message.content:
-            if message.content[0] == '!':
+            if message.content[0] == '!' and not message.author.bot:
                 message_elements=message.content.split(' ')
                 message_elements=[i for i in message_elements if i]
                 command=message_elements[0][1:]
