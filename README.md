@@ -1,8 +1,6 @@
 # alice
 [![forthebadge made-with-python](http://ForTheBadge.com/images/badges/made-with-python.svg)](https://www.python.org/)
 
-A tournament bot for discord servers.
-
 ## Purpose
 alice can host tournaments for your Discord server by utilizing the Challonge API. alice brings the riveting tournament experience to a Discord channel for simplicity and convenience. Creating a tournament has never been easier!
 
