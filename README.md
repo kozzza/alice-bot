@@ -1,6 +1,8 @@
 # alice
 [![forthebadge made-with-python](http://ForTheBadge.com/images/badges/made-with-python.svg)](https://www.python.org/)
-[![Downloads](https://img.shields.io/github/downloads/kozzza/alice-bot/total.svg)](https://github.com/kozzza/alice-bot/releases/latest)
+<a href=https://discord.bots.gg/bots/723813871881551932>
+  <img src="https://discordapp.com/api/guilds/615786113394671619/widget.png" alt="Discord" width="200"/>
+</a>
 
 ## Purpose
 alice can host tournaments for your Discord server by utilizing the Challonge API. alice brings the riveting tournament experience to a Discord channel for simplicity and convenience. Creating a tournament has never been easier!
