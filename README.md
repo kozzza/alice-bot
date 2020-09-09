@@ -1,7 +1,8 @@
 # alice
 [![forthebadge made-with-python](http://ForTheBadge.com/images/badges/made-with-python.svg)](https://www.python.org/)
+<br>
 <a href=https://discord.bots.gg/bots/723813871881551932>
-  <img src="https://discordapp.com/api/guilds/615786113394671619/widget.png" alt="Discord" width="200"/>
+  <img src="https://discordapp.com/api/guilds/615786113394671619/widget.png" alt="Discord"/>
 </a>
 
 ## Purpose
