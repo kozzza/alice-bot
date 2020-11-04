@@ -1,0 +1,14 @@
+{
+    "missing_permissions": {
+        "description": "Insufficient permission to run command",
+        "required": [
+            "Administrator"
+        ]
+    },
+    "channel_disabled": {
+        "description": "Channel is blocked from receiving commands"
+    },
+    "channel_occupied": {
+        "description": "Channel is currently hosting a tournament (wait for tournament to complete or try another channel)"
+    }
+}
