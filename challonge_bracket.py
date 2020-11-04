@@ -3,24 +3,25 @@ from datetime import datetime
 import shortuuid
 import challonge
 
-class ChallongeTourney():
-	
-	def __init__(self, participants, tournament_name, game, url=shortuuid.uuid()[:8]):
-		self.participants = participants
+class ChallongeTournament:
+	def __init__(self, participant_names, participant_ids, tournament_name, game, url=shortuuid.uuid()[:8], tournament_type='double elimination'):
+		self.participant_names = participant_names
+		self.participant_ids = participant_ids
 		self.tournament_name = tournament_name
 		self.game = game
 		self.url = url
+		self.tournament_type = tournament_type
 		challonge.set_credentials(config('CHALLONGE_USERNAME'), config('CHALLONGE_API_KEY'))
-	
+
 	def create_tournament(self):
 		try:
-			challonge.tournaments.create(name=self.tournament_name, url=self.url, game_name=self.game, tournament_type='double elimination')
+			challonge.tournaments.create(name=self.tournament_name, url=self.url, game_name=self.game, tournament_type=self.tournament_type)
 		except challonge.api.ChallongeException as e:
 			self.url = shortuuid.uuid()[:8]
-			self.create_tournament()
+			return self.create_tournament()
 		
-		for participant in self.participants:
-			challonge.participants.create(tournament=self.url, name=participant)
+		for i in range(len(self.participant_names)):
+			challonge.participants.create(tournament=self.url, name=self.participant_names[i], misc=self.participant_ids[i])
 		challonge.tournaments.start(self.url)
 
 		return self.url
