@@ -1,2 +1,2 @@
 worker: python bot.py
-web: gunicorn cogs.dbl
+web: python bot.py

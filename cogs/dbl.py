@@ -56,7 +56,7 @@ class TopGG(commands.Cog):
         except Exception as e:
             print(e)
 
-
+    @commands.Cog.listener()
     async def on_dbl_test(self, data):
         print(data)
 
