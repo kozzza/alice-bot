@@ -1,0 +1,91 @@
+{
+    "ping": {
+        "aliases": [
+            "ping"
+        ],
+        "description": "Returns the latency of the bot",
+        "usage": "ping"
+    },
+    "help": {
+        "aliases": [
+            "help"
+        ],
+        "description": "Shows a help message containing information on all commands",
+        "usage": "help"
+    },
+    "prefix": {
+        "aliases": [
+            "prefix"
+        ],
+        "description": "Changes the command prefix for the bot",
+        "usage": "prefix <new_prefix>",
+        "restraints": "<new prefix> cannot be longer than 5 characters and cannot include whitespace"
+    },
+    "enable": {
+        "aliases": [
+            "enable"
+        ],
+        "description": "Grants alice permission to read and respond to commands in a channel",
+        "usage": "enable <channel>",
+        "restraints": "<channel> must either be a channel id or channel tag"
+    },
+    "disable": {
+        "aliases": [
+            "disable"
+        ],
+        "description": "Denies alice permission to read and respond to commands in a channel",
+        "usage": "disable <channel>",
+        "restraints": "<channel> must either be a channel id or channel tag"
+    },
+    "open": {
+        "aliases": [
+            "open"
+        ],
+        "description": "Concludes a tournament in a channel and opens the channel up",
+        "usage": "open <channel>",
+        "restraints": "<channel> must either be a channel id or channel tag"
+    },
+    "vote": {
+        "aliases": [
+            "vote"
+        ],
+        "description": "Vote for alice to receive a special token of gratitude",
+        "usage": "vote"
+    },
+    "tournament": {
+        "aliases": [
+            "tournament",
+            "tourney"
+        ],
+        "description": "Creates a tournament with a round-robin followed by a seeded bracket on Challonge",
+        "usage": "tournament <name>, <game>, <type (optional)>",
+        "restraints": [
+            "<name> cannot include commas",
+            "<game> cannot include commas and might not be recognized if it isn't well known",
+            "<type (optional)> must either be se for single elimination or de for double elimination (default: double elimination)"
+        ]
+    },
+    "roundrobin": {
+        "aliases": [
+            "roundrobin",
+            "rr"
+        ],
+        "description": "Creates a round-robin competition on your Discord server",
+        "usage": "roundrobin <name>",
+        "restraints": [
+            "<name> None"
+        ]
+    },
+    "bracket": {
+        "aliases": [
+            "bracket"
+        ],
+        "description": "Creates a bracket on Challonge using predetermined seeds",
+        "usage": "bracket <name>, <game>, <type (optional)>",
+        "restraints": [
+            "<name> cannot include commas",
+            "<game> cannot include commas and might not be recognized if it isn't well known",
+            "<type (optional)> must either be se for single elimination or de for double elimination (default: double elimination)"
+        ]
+    }
+}
