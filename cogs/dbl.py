@@ -57,5 +57,9 @@ class TopGG(commands.Cog):
             print(e)
 
 
+    async def on_dbl_test(self, data):
+        print(data)
+
+
 def setup(bot):
     bot.add_cog(TopGG(bot))
