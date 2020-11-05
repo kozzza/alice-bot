@@ -5,12 +5,10 @@ import dbl
 from manager import Manager
 from manager import check_channel_perms, check_ongoing_tournament, detect_help
 
-from sql_query import SQLQuery
-
 class Basic(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
-        self.sql_query = SQLQuery()
+        self.sql_query = self.bot.sql_query
         self.manager = Manager()
 
     @ commands.command(name='ping')

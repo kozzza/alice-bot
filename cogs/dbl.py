@@ -14,7 +14,7 @@ import traceback, sys
 class TopGG(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
-        self.sql_query = SQLQuery()
+        self.sql_query = self.bot.sql_query
         self.manager = Manager()
         self.sticher = Stitcher()
         self.dbl_token = config('DBL_TOKEN')
@@ -46,6 +46,8 @@ class TopGG(commands.Cog):
                 0xFFA500, 'attachment://user_awarded.png', ['Award'], ['You got a one of a kind medallion!'], 
                 footer=[f'{user.name}  \u2022  {self.manager.current_time()}', user.avatar_url])
                 await channel_trigged_in.send(embed=embed, file=discord.File(thumbnail_data, 'user_awarded.png'))
+
+                self.sql_query.update_by_increment('guilds', ['vote_count'], ['guild_id'], [[param_dict.get('guild')]])
             
             else:
                 embed = self.manager.create_embed('You voted!', 'Thank you valued patron for supporting alice.'
@@ -55,9 +57,6 @@ class TopGG(commands.Cog):
                 0xFFA500, 'attachment://user_awarded.png', ['Award'], ['You got a one of a kind medallion!'],
                 footer=[f'{user.name}  \u2022  {self.manager.current_time()}', user.avatar_url])
                 await user.send(embed=embed, file=discord.File(thumbnail_data, 'user_awarded.png'))
-            
-            if param_dict.get('guild'):
-                self.sql_query.update_by_increment('guilds', ['vote_count'], ['guild_id'], [[param_dict.get('guild')]])
 
         except Exception as e:
             print(e)

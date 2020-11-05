@@ -2,7 +2,6 @@ from discord.ext import commands
 import discord
 
 from manager import Manager
-from sql_query import SQLQuery
 
 import random
 import json
@@ -10,8 +9,8 @@ import json
 class Activation(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
+        self.sql_query = self.bot.sql_query
         self.manager = Manager()
-        self.sql_query = SQLQuery()
     
     @ commands.Cog.listener()
     async def on_ready(self):
