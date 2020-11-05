@@ -2,20 +2,24 @@ from discord.ext import commands, tasks
 import discord
 import dbl
 
+from sql_query import SQLQuery
 from manager import Manager
 from stitcher import Stitcher
 
 from decouple import config
+from os import environ
 import asyncio
 
 class TopGG(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
+        self.sql_query = SQLQuery()
         self.manager = Manager()
         self.sticher = Stitcher()
         self.dbl_token = config('DBL_TOKEN')
         self.webhook_auth_token = config('ALICE_WEBHOOK_AUTH_TOKEN')
-        self.dblpy = dbl.DBLClient(self.bot, self.dbl_token, webhook_path='/dblwebhook', webhook_auth=self.webhook_auth_token, webhook_port=8000)
+        self.dblpy = dbl.DBLClient(self.bot, self.dbl_token, webhook_path='/dblwebhook', webhook_auth=self.webhook_auth_token, webhook_port=environ.get("PORT", 8000))
+        print("intialized dbl")
 
     @commands.Cog.listener()
     async def on_dbl_vote(self, data):
@@ -53,6 +57,8 @@ class TopGG(commands.Cog):
                 0xFFA500, 'attachment://user_awarded.png', ['Award'], ['You got a one of a kind medallion!'],
                 footer=[f'{member.display_name}  \u2022  {self.manager.current_time()}', member.avatar_url])
                 await user.send(embed=embed, file=discord.File(thumbnail_data, 'user_awarded.png'))
+            
+            self.sql_query.update_by_increment('guilds', ['vote_count'], ['guild_id'], [[str(ctx.guild.id)]])
         except Exception as e:
             print(e)
 
