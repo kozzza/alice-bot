@@ -7,8 +7,7 @@ from manager import Manager
 from decouple import config
 import os
 
-manager = Manager()
-command_names = [alias for command in manager.command_json.values() for alias in command['aliases']]
+command_names = [alias for command in Manager().command_json.values() for alias in command['aliases']]
 
 async def get_prefix(bot, message):
 	prefix = ['!']
@@ -20,7 +19,7 @@ async def get_prefix(bot, message):
 	
 	return commands.when_mentioned_or(*prefix)(bot, message)
 
-bot = commands.Bot(command_prefix=get_prefix, fetch_offline_members=False)
+bot = commands.Bot(command_prefix=get_prefix)
 bot.remove_command('help')
 
 if __name__ == '__main__':

@@ -9,6 +9,7 @@ from stitcher import Stitcher
 from decouple import config
 from os import environ
 import asyncio
+import traceback, sys
 
 class TopGG(commands.Cog):
     def __init__(self, bot):
@@ -19,13 +20,11 @@ class TopGG(commands.Cog):
         self.dbl_token = config('DBL_TOKEN')
         self.webhook_auth_token = config('ALICE_WEBHOOK_AUTH_TOKEN')
         self.dblpy = dbl.DBLClient(self.bot, self.dbl_token, webhook_path='/dblwebhook', webhook_auth=self.webhook_auth_token, webhook_port=environ.get("PORT", 8000))
-        print("intialized dbl")
 
     @commands.Cog.listener()
     async def on_dbl_vote(self, data):
-        print(data)
         user_id = int(data['user'])
-        user = self.bot.get_user(user_id)
+        user = await self.bot.fetch_user(user_id)
         thumbnail_data = self.sticher.stitch_images(f'https://cdn.discordapp.com/avatars/{user.id}/{user.avatar}.png?size=1024',
         './static/images/medal.png')
 
@@ -38,15 +37,14 @@ class TopGG(commands.Cog):
 
         try:
             if param_dict:
-                guild_triggered_in = self.bot.get_guild(param_dict.get('guild'))
+                guild_triggered_in = [guild for guild in self.bot.guilds if guild.id == param_dict.get('guild')][0]
                 channel_trigged_in = guild_triggered_in.get_channel(param_dict.get('channel'))
-                member = guild_triggered_in.get_member(user_id)
-                embed = self.manager.create_embed(f'{member.display_name} has voted!', 'Thank you valued patron for supporting alice.'
+                embed = self.manager.create_embed(f'{user.name} has voted!', 'Thank you valued patron for supporting alice.'
                 ' Your contribution will not go in vain as I award you the highest prestige I can bestow.'
                 ' Your name will echo through the decades to come, enscribed with the flow of light on alloy whose origins stem from the creation of Earth.'
                 ' Now come hero, accept your award and be off to privilege our world with more of your good deeds.',
                 0xFFA500, 'attachment://user_awarded.png', ['Award'], ['You got a one of a kind medallion!'], 
-                footer=[f'{member.display_name}  \u2022  {self.manager.current_time()}', member.avatar_url])
+                footer=[f'{user.name}  \u2022  {self.manager.current_time()}', user.avatar_url])
                 await channel_trigged_in.send(embed=embed, file=discord.File(thumbnail_data, 'user_awarded.png'))
             
             else:
@@ -55,10 +53,12 @@ class TopGG(commands.Cog):
                 ' Your name will echo through the decades to come, enscribed with the flow of light on alloy whose origins stem from the creation of Earth.'
                 ' Now come hero, accept your award and be off to privilege our world with more of your good deeds.',
                 0xFFA500, 'attachment://user_awarded.png', ['Award'], ['You got a one of a kind medallion!'],
-                footer=[f'{member.display_name}  \u2022  {self.manager.current_time()}', member.avatar_url])
+                footer=[f'{user.name}  \u2022  {self.manager.current_time()}', user.avatar_url])
                 await user.send(embed=embed, file=discord.File(thumbnail_data, 'user_awarded.png'))
             
-            self.sql_query.update_by_increment('guilds', ['vote_count'], ['guild_id'], [[str(ctx.guild.id)]])
+            if param_dict.get('guild'):
+                self.sql_query.update_by_increment('guilds', ['vote_count'], ['guild_id'], [[param_dict.get('guild')]])
+
         except Exception as e:
             print(e)
 
