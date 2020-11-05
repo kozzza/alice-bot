@@ -1,12 +1,20 @@
 from mysql.connector.pooling import MySQLConnectionPool
 from decouple import config
 
+import os
+
 connection = {'host': config('CLEAR_DB_HOST'),
 	'user': config('CLEAR_DB_USER'),
 	'password': config('CLEAR_DB_PASSWORD'),
 	'database': config('CLEAR_DB_DATABASE')
 }
-pool = MySQLConnectionPool(pool_name='primary_pool', **connection)
+
+pool = None
+
+def initialize_connection():
+	global pool
+	pool = MySQLConnectionPool(pool_name='primary_pool', **connection)
+	print(pool)
 
 class SQLQuery():
 	def __init__(self):

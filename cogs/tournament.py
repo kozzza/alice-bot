@@ -6,9 +6,7 @@ from manager import check_channel_perms, check_ongoing_tournament, detect_help
 from challonge_bracket import ChallongeTournament
 
 from datetime import datetime
-import asyncio
 import random
-import traceback
 
 
 class Tournament(commands.Cog):

@@ -7,9 +7,6 @@ from manager import Manager
 from stitcher import Stitcher
 
 from decouple import config
-from os import environ
-import asyncio
-import traceback, sys
 
 class TopGG(commands.Cog):
     def __init__(self, bot):
@@ -19,7 +16,7 @@ class TopGG(commands.Cog):
         self.sticher = Stitcher()
         self.dbl_token = config('DBL_TOKEN')
         self.webhook_auth_token = config('ALICE_WEBHOOK_AUTH_TOKEN')
-        self.dblpy = dbl.DBLClient(self.bot, self.dbl_token, webhook_path='/dblwebhook', webhook_auth=self.webhook_auth_token, webhook_port=environ.get("PORT", 8000))
+        self.dblpy = dbl.DBLClient(self.bot, self.dbl_token, webhook_path='/dblwebhook', webhook_auth=self.webhook_auth_token, webhook_port=8000)
 
     @commands.Cog.listener()
     async def on_dbl_vote(self, data):
