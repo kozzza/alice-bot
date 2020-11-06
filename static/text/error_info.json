@@ -6,9 +6,9 @@
         ]
     },
     "channel_disabled": {
-        "description": "Channel is blocked from receiving commands (use the enable command in the channel)"
+        "description": "Channel is blocked from receiving commands (use the enable command to allow commands in the channel)"
     },
     "channel_occupied": {
-        "description": "Channel is currently hosting a tournament (wait for tournament to complete or use another channel)"
+        "description": "Channel is currently hosting a tournament (wait for tournament to complete, use another channel, or use the open command to forcibly end the tournament)"
     }
 }
