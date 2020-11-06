@@ -1,21 +1,18 @@
 from discord.ext import commands
 import discord
 
-from sql_query import SQLQuery
 from manager import Manager
 from manager import check_channel_perms, check_ongoing_tournament, detect_help
 from challonge_bracket import ChallongeTournament
 
 from datetime import datetime
-import asyncio
 import random
-import traceback
 
 
 class Tournament(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
-        self.sql_query = SQLQuery()
+        self.sql_query = self.bot.sql_query
         self.manager = Manager()
 
         self.tournament_reactions = ['\U0001F39F', '\U0001F3C1']
