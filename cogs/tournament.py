@@ -298,11 +298,11 @@ class Tournament(commands.Cog):
         participants = [member if isinstance(member, discord.Member) else await channel.guild.fetch_member(member.id) 
                         async for member in bot_prompt_message.reactions[0].users(limit=65)][1:]
         if len(participants) < 2:
-            bot_error_message = await channel.send(f'*Need more players to start the tournament, restarting...*')
+            bot_error_message = await channel.send(f'*Need more players to start the bracket, restarting...*')
             await asyncio.sleep(3)
             await bot_prompt_message.delete()
             await bot_error_message.delete()
-            return await self.prompt_tournament(ctx)
+            return await self.prompt_bracket(ctx)
         
         participants_dict = {str(member.id): member.display_name for member in participants}
         participant_ids = list(participants_dict.keys())
