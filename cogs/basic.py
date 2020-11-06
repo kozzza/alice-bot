@@ -5,6 +5,8 @@ import dbl
 from manager import Manager
 from manager import check_channel_perms, check_ongoing_tournament, detect_help
 
+from decouple import config
+
 class Basic(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
@@ -156,6 +158,20 @@ class Basic(commands.Cog):
         else:
             await ctx.message.delete()
             await ctx.author.send(embed=embed)
+
+    @ commands.command(name='announce')
+    @ check_channel_perms
+    async def announcement_command(self, ctx):
+        try:
+            user_id = ctx.author.id
+            if user_id == int(config('BOT_OWNER_ID')):
+                for guild in self.bot.guilds:
+                    for channel in guild.text_channels:
+                        if channel.permissions_for(guild.me).send_messages:
+                            await channel.send(ctx.message.content[len(ctx.prefix+ctx.invoked_with):].strip())
+                            break
+        except Exception as e:
+            print(e)
 
     @commands.Cog.listener()
     async def on_command_error(self, ctx, error):

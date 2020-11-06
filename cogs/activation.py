@@ -20,6 +20,8 @@ class Activation(commands.Cog):
     @ commands.Cog.listener()
     async def on_guild_join(self, guild):
         self.sql_query.insert_and_update('guilds', ['guild_id', 'prefix'], [str(guild.id), '!'], [])
+        print(f'Joined {guild.name} with {guild.member_count} members.')
+
         disable_channel_role = await guild.create_role(name='alice dnd', colour=discord.Colour(0xFF4500))
         ongoing_tournament_role = await guild.create_role(name='alice tournament', colour=discord.Colour(0xFFE614))
 

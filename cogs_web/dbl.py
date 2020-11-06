@@ -31,7 +31,7 @@ class TopGG(commands.Cog):
             param_dict = {param.split('=')[0]:int(param.split('=')[1]) for param in query_string_params}
         except Exception as e:
             param_dict = {}
-            print(e)
+            print(e, param_dict)
 
         try:
             if param_dict:
@@ -58,8 +58,6 @@ class TopGG(commands.Cog):
 
         except Exception as e:
             print('dbl_vote ' + str(e))
-            import traceback
-            traceback.print_exc()
 
     @ commands.Cog.listener()
     async def on_dbl_test(self, data):
