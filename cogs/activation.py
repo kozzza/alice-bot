@@ -28,7 +28,8 @@ class Activation(commands.Cog):
         introduced = False
         for channel in guild.text_channels:
             if channel.permissions_for(guild.me).send_messages and not introduced:
-                await channel.set_permissions(disable_channel_role, read_messages=True, send_messages=True)
+                if channel.permissions_for(guild.me).manage_permissions:
+                    await channel.set_permissions(disable_channel_role, read_messages=True, send_messages=True)
                 
                 hellos = json.load(open('./static/text/hellos.json'))
                 random_hello = random.choice(list(hellos))
