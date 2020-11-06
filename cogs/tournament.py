@@ -7,6 +7,7 @@ from challonge_bracket import ChallongeTournament
 
 from datetime import datetime
 import random
+import asyncio
 
 
 class Tournament(commands.Cog):
