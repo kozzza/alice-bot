@@ -18,11 +18,9 @@ class TopGG(commands.Cog):
         self.dbl_token = config('DBL_TOKEN')
         self.webhook_auth_token = config('ALICE_WEBHOOK_AUTH_TOKEN')
         self.dblpy = dbl.DBLClient(self.bot, self.dbl_token, webhook_path='/dblwebhook', webhook_auth=self.webhook_auth_token, webhook_port=environ.get("PORT", 8000))
-        print('initialized')
 
     @ commands.Cog.listener()
     async def on_dbl_vote(self, data):
-        print(data)
         user_id = int(data['user'])
         user = await self.bot.fetch_user(user_id)
         thumbnail_data = self.stitcher.stitch_images(f'https://cdn.discordapp.com/avatars/{user.id}/{user.avatar}.png?size=1024',

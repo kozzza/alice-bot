@@ -1,7 +1,6 @@
 from mysql.connector.pooling import MySQLConnectionPool
-from decouple import config
 
-import os
+from decouple import config
 
 connection = {'host': config('CLEAR_DB_HOST'),
 	'user': config('CLEAR_DB_USER'),

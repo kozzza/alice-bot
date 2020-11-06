@@ -1,10 +1,8 @@
 import discord
 
 from datetime import datetime
-
 import json, copy
 import functools
-import traceback
 
 class Manager():
     def __init__(self):
@@ -63,6 +61,7 @@ class Manager():
         for i in range(len(field_names)):
             embed.add_field(name=field_names[i], value=field_values[i], inline=False)
         return embed
+
 
 def detect_help(expected_arg_count=0, split_by=None):
     """Detect commands with missing arguments or "help" as the first argument"""
@@ -153,6 +152,5 @@ def check_ongoing_tournament(coro):
             return await coro(*args, **kwargs)
         except Exception as e:
             print(e)
-            traceback.print_exc()
 
     return wrapper

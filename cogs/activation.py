@@ -48,13 +48,14 @@ class Activation(commands.Cog):
         await self.manager.get_role_by_name(guild, 'alice dnd').delete()
         await self.manager.get_role_by_name(guild, 'alice tournament').delete()
     
-    @commands.Cog.listener()
+    @ commands.Cog.listener()
     async def on_guild_channel_create(self, channel):
         disable_channel_role = self.manager.get_role_by_name(channel.guild, 'alice dnd')
         ongoing_tournament_role = self.manager.get_role_by_name(channel.guild, 'alice tournament')
 
         await channel.set_permissions(disable_channel_role, read_messages=False, send_messages=False)
         await channel.set_permissions(ongoing_tournament_role, read_messages=True, send_messages=True)
+
 
 def setup(bot):
     bot.add_cog(Activation(bot))
