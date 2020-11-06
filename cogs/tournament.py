@@ -297,9 +297,6 @@ class Tournament(commands.Cog):
         bot_prompt_message = await channel.fetch_message(bot_prompt_message.id)
         participants = [member if isinstance(member, discord.Member) else await channel.guild.fetch_member(member.id) 
                         async for member in bot_prompt_message.reactions[0].users(limit=65)][1:]
-        participants.append(await channel.guild.fetch_member(750868970659119214)) # TEST
-        participants.append(await channel.guild.fetch_member(723813871881551932)) # TEST
-        participants.append(await channel.guild.fetch_member(218561502968283137)) # TEST
         if len(participants) < 2:
             bot_error_message = await channel.send(f'*Need more players to start the tournament, restarting...*')
             await asyncio.sleep(3)
@@ -358,9 +355,6 @@ class Tournament(commands.Cog):
         bot_prompt_message = await channel.fetch_message(bot_prompt_message.id)
         participants = [member if isinstance(member, discord.Member) else await channel.guild.fetch_member(member.id) 
                         async for member in bot_prompt_message.reactions[0].users(limit=65)][1:]
-        participants.append(await channel.guild.fetch_member(750868970659119214)) # TEST
-        participants.append(await channel.guild.fetch_member(723813871881551932)) # TEST
-        participants.append(await channel.guild.fetch_member(218561502968283137)) # TEST
         if len(participants) < 2:
             bot_error_message = await channel.send(f'*Need more players to start the tournament, restarting...*')
             await asyncio.sleep(3)
