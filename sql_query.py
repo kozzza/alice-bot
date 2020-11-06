@@ -9,15 +9,12 @@ connection = {'host': config('CLEAR_DB_HOST'),
 	'database': config('CLEAR_DB_DATABASE')
 }
 
-pool = None
-
 def initialize_connection():
-	global pool
-	pool = MySQLConnectionPool(pool_name='primary_pool', **connection)
-	print(pool)
+	pool = MySQLConnectionPool(pool_name='primary_pool', pool_size=2, **connection)
+	return pool
 
 class SQLQuery():
-	def __init__(self):
+	def __init__(self, pool):
 		self.pool = pool
 		
 	def raw_query(self, query):

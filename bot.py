@@ -1,15 +1,13 @@
 from discord.ext import commands
 import discord
 
-import sql_query 
 from sql_query import initialize_connection, SQLQuery
 from manager import Manager
 
 from decouple import config
 import os
 
-initialize_connection()
-sql_query = SQLQuery()
+sql_query = SQLQuery(initialize_connection())
 manager = Manager()
 
 command_names = [alias for command in manager.command_json.values() for alias in command['aliases']]

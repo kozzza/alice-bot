@@ -2,27 +2,30 @@ from discord.ext import commands, tasks
 import discord
 import dbl
 
-from sql_query import SQLQuery
+from sql_query import initialize_connection, SQLQuery
 from manager import Manager
 from stitcher import Stitcher
 
 from decouple import config
+from os import environ
 
 class TopGG(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
-        self.sql_query = self.bot.sql_query
+        self.sql_query = SQLQuery(initialize_connection())
         self.manager = Manager()
-        self.sticher = Stitcher()
+        self.stitcher = Stitcher()
         self.dbl_token = config('DBL_TOKEN')
         self.webhook_auth_token = config('ALICE_WEBHOOK_AUTH_TOKEN')
-        self.dblpy = dbl.DBLClient(self.bot, self.dbl_token, webhook_path='/dblwebhook', webhook_auth=self.webhook_auth_token, webhook_port=8000)
+        self.dblpy = dbl.DBLClient(self.bot, self.dbl_token, webhook_path='/dblwebhook', webhook_auth=self.webhook_auth_token, webhook_port=environ.get("PORT", 8000))
+        print('initialized')
 
-    @commands.Cog.listener()
+    @ commands.Cog.listener()
     async def on_dbl_vote(self, data):
+        print(data)
         user_id = int(data['user'])
         user = await self.bot.fetch_user(user_id)
-        thumbnail_data = self.sticher.stitch_images(f'https://cdn.discordapp.com/avatars/{user.id}/{user.avatar}.png?size=1024',
+        thumbnail_data = self.stitcher.stitch_images(f'https://cdn.discordapp.com/avatars/{user.id}/{user.avatar}.png?size=1024',
         './static/images/medal.png')
 
         try:
@@ -56,9 +59,11 @@ class TopGG(commands.Cog):
                 await user.send(embed=embed, file=discord.File(thumbnail_data, 'user_awarded.png'))
 
         except Exception as e:
-            print(e)
+            print('dbl_vote ' + str(e))
+            import traceback
+            traceback.print_exc()
 
-    @commands.Cog.listener()
+    @ commands.Cog.listener()
     async def on_dbl_test(self, data):
         print(data)
 
