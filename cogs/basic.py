@@ -27,26 +27,23 @@ class Basic(commands.Cog):
     @ check_channel_perms
     @ detect_help()
     async def help_command(self, ctx):
-        try:
-            channel = ctx.channel
-            help_field_names = [ctx.prefix + field_name for field_name in ['help', 'prefix', 'enable', 'disable', 'open', 'ping', 'tournament', 'roundrobin', 'bracket', 'vote']]
-            help_field_values = ['Shows this message', 'Changes the command prefix for the bot', 
-                'Grants alice permission to read and respond to commands in a channel', 'Denies alice permission to read and respond to commands in a channel', 
-                'Concludes a tournament in a channel and opens the channel up', 'Returns the latency of the bot', 
-                'Creates a tournament with a round-robin followed by a seeded bracket on Challonge', 'Creates a round-robin competition on your Discord server', 
-                'Creates a bracket on Challonge using predetermined seeds', 'Vote for alice to receive a special token of gratitude']
-            
-            embed = self.manager.create_embed('Help', 'alice allows you to play tournaments without leaving the comfort of your Discord server!'
-                ' Usage information for each command can be found by passing help into the first argument (i.e. !tournament help). Please consider voting!',
-                0xC96FCA, '', help_field_names, help_field_values, footer=['Found a bug? DM koza#5339', ''])
-            channel_occupied = channel.overwrites_for(self.manager.get_role_by_name(channel.guild, 'alice tournament')).pair()[0]
-            if channel_occupied.read_messages and channel_occupied.send_messages:
-                await channel.send(embed=embed)
-            else:
-                await ctx.message.delete()
-                await ctx.author.send(embed=embed)
-        except Exception as e:
-            print(e)
+        channel = ctx.channel
+        help_field_names = [ctx.prefix + field_name for field_name in ['help', 'prefix', 'enable', 'disable', 'open', 'ping', 'tournament', 'roundrobin', 'bracket', 'vote']]
+        help_field_values = ['Shows this message', 'Changes the command prefix for the bot', 
+            'Grants alice permission to read and respond to commands in a channel', 'Denies alice permission to read and respond to commands in a channel', 
+            'Concludes a tournament in a channel and opens the channel up', 'Returns the latency of the bot', 
+            'Creates a tournament with a round-robin followed by a seeded bracket on Challonge', 'Creates a round-robin competition on your Discord server', 
+            'Creates a bracket on Challonge using predetermined seeds', 'Vote for alice to receive a special token of gratitude']
+        
+        embed = self.manager.create_embed('Help', 'alice allows you to play tournaments without leaving the comfort of your Discord server!'
+            ' Usage information for each command can be found by passing help into the first argument (i.e. !tournament help). Please consider voting!',
+            0xC96FCA, '', help_field_names, help_field_values, footer=['Found a bug? DM koza#5339', ''])
+        channel_occupied = channel.overwrites_for(self.manager.get_role_by_name(channel.guild, 'alice tournament')).pair()[0]
+        if channel_occupied.read_messages and channel_occupied.send_messages:
+            await channel.send(embed=embed)
+        else:
+            await ctx.message.delete()
+            await ctx.author.send(embed=embed)
             
     @ commands.guild_only()
     @ commands.command(name='prefix')
@@ -162,16 +159,13 @@ class Basic(commands.Cog):
     @ commands.command(name='announce')
     @ check_channel_perms
     async def announcement_command(self, ctx):
-        try:
-            user_id = ctx.author.id
-            if user_id == int(config('BOT_OWNER_ID')):
-                for guild in self.bot.guilds:
-                    for channel in guild.text_channels:
-                        if channel.permissions_for(guild.me).send_messages:
-                            await channel.send(ctx.message.content[len(ctx.prefix+ctx.invoked_with):].strip())
-                            break
-        except Exception as e:
-            print(e)
+        user_id = ctx.author.id
+        if user_id == int(config('BOT_OWNER_ID')):
+            for guild in self.bot.guilds:
+                for channel in guild.text_channels:
+                if channel.permissions_for(guild.me).send_messages:
+                        await channel.send(ctx.message.content[len(ctx.prefix+ctx.invoked_with):].strip())
+                        break
 
     @commands.Cog.listener()
     async def on_command_error(self, ctx, error):

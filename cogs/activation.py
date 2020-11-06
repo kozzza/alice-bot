@@ -39,24 +39,41 @@ class Activation(commands.Cog):
                 await channel.send(embed=embed, file=discord.File('./static/images/alice.png', filename='alice.png'))
                 introduced = True
             else:
-                await channel.set_permissions(disable_channel_role, read_messages=False, send_messages=False)
+                try:
+                    await channel.set_permissions(disable_channel_role, read_messages=False, send_messages=False)
+                except Exception as e:
+                    print(e)
             
-            await channel.set_permissions(ongoing_tournament_role, read_messages=True, send_messages=True)
+            try:
+                await channel.set_permissions(ongoing_tournament_role, read_messages=True, send_messages=True)
+            except Exception as e:
+                print(e)
         
         await self.bot.change_presence(activity=discord.Game(name=f"!help | {len(list(self.bot.guilds))} guilds"))
 
     @ commands.Cog.listener()
     async def on_guild_remove(self, guild):
-        await self.manager.get_role_by_name(guild, 'alice dnd').delete()
-        await self.manager.get_role_by_name(guild, 'alice tournament').delete()
+        disable_channel_role = self.manager.get_role_by_name(guild, 'alice dnd')
+        ongoing_tournament_role = self.manager.get_role_by_name(guild, 'alice tournament')
+        
+        if disable_channel_role:
+            await disable_channel_role.delete()
+        if ongoing_tournament_role:
+            await ongoing_tournament_role.delete()
     
     @ commands.Cog.listener()
     async def on_guild_channel_create(self, channel):
         disable_channel_role = self.manager.get_role_by_name(channel.guild, 'alice dnd')
         ongoing_tournament_role = self.manager.get_role_by_name(channel.guild, 'alice tournament')
 
-        await channel.set_permissions(disable_channel_role, read_messages=False, send_messages=False)
-        await channel.set_permissions(ongoing_tournament_role, read_messages=True, send_messages=True)
+        try:
+            await channel.set_permissions(disable_channel_role, read_messages=False, send_messages=False)
+        except Exception as e:
+            print(e)
+        try:
+            await channel.set_permissions(ongoing_tournament_role, read_messages=True, send_messages=True)
+        except Exception as e:
+            print(e)
 
 
 def setup(bot):
