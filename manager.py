@@ -24,6 +24,7 @@ class Manager():
 
         command_description = command_dict.pop('description')
         command_dict['usage'] = prefix + command_dict['usage']
+        command_dict['example'] = prefix + command_dict['example']
 
         for k, v in command_dict.items():
             field_names.append(k.capitalize())

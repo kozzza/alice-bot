@@ -25,7 +25,8 @@ async def get_prefix(bot, message):
 bot = commands.Bot(command_prefix=get_prefix, case_insensitive=True)
 bot.remove_command('help')
 
-bot.sql_query = sql_query # add sql_query attribute to bot object as not to initialize a new pool for every cog
+# add sql_query attribute to bot object as not to initialize a new pool for every cog
+bot.sql_query = sql_query
 
 if __name__ == '__main__':
 	for filename in os.listdir('./cogs'):

@@ -19,7 +19,8 @@
         ],
         "description": "Changes the command prefix for the bot",
         "usage": "prefix <new_prefix>",
-        "restraints": "<new prefix> cannot be longer than 5 characters and cannot include whitespace"
+        "restraints": "<new prefix> cannot be longer than 5 characters and cannot include whitespace",
+        "example": "prefix >"
     },
     "enable": {
         "aliases": [
@@ -27,7 +28,8 @@
         ],
         "description": "Grants alice permission to read and respond to commands in a channel",
         "usage": "enable <channel>",
-        "restraints": "<channel> must either be a channel id or channel tag"
+        "restraints": "<channel> must either be a channel id or channel tag",
+        "example": "enable #bot-commands"
     },
     "disable": {
         "aliases": [
@@ -35,7 +37,8 @@
         ],
         "description": "Denies alice permission to read and respond to commands in a channel",
         "usage": "disable <channel>",
-        "restraints": "<channel> must either be a channel id or channel tag"
+        "restraints": "<channel> must either be a channel id or channel tag",
+        "example": "disable #announcements"
     },
     "open": {
         "aliases": [
@@ -43,7 +46,8 @@
         ],
         "description": "Concludes a tournament in a channel and opens the channel up",
         "usage": "open <channel>",
-        "restraints": "<channel> must either be a channel id or channel tag"
+        "restraints": "<channel> must either be a channel id or channel tag",
+        "example": "open #general"
     },
     "vote": {
         "aliases": [
@@ -63,7 +67,8 @@
             "<name> cannot include commas",
             "<game> cannot include commas and might not be recognized if it isn't well known",
             "<type (optional)> must either be se for single elimination or de for double elimination (default: double elimination)"
-        ]
+        ],
+        "example": "tournament alice's tourney, mario kart"
     },
     "roundrobin": {
         "aliases": [
@@ -74,7 +79,8 @@
         "usage": "roundrobin <name>",
         "restraints": [
             "<name> None"
-        ]
+        ],
+        "example": "roundrobin alice's round-robin"
     },
     "bracket": {
         "aliases": [
@@ -86,6 +92,7 @@
             "<name> cannot include commas",
             "<game> cannot include commas and might not be recognized if it isn't well known",
             "<type (optional)> must either be se for single elimination or de for double elimination (default: double elimination)"
-        ]
+        ],
+        "example": "bracket alice's bracket, mario kart, se"
     }
 }
