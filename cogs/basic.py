@@ -164,8 +164,8 @@ class Basic(commands.Cog):
             for guild in self.bot.guilds:
                 for channel in guild.text_channels:
                     if channel.permissions_for(guild.me).send_messages:
-                            await channel.send(ctx.message.content[len(ctx.prefix+ctx.invoked_with):].strip())
-                            break
+                        await channel.send(ctx.message.content[len(ctx.prefix+ctx.invoked_with):].strip())
+                        break
 
     @commands.Cog.listener()
     async def on_command_error(self, ctx, error):
