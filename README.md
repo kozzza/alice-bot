@@ -1,5 +1,6 @@
 # alice
 [![forthebadge made-with-python](http://ForTheBadge.com/images/badges/made-with-python.svg)](https://www.python.org/)
+<br>
 [![TopGG](https://img.shields.io/badge/Invite-alice-2c2f33?logo=discord&logoColor=white&labelColor=7289d9&style=for-the-badge)](https://top.gg/bot/723813871881551932)
 
 ## Purpose
@@ -17,6 +18,6 @@ alice has many commands to help manage matches in your server. To view all avail
 
 One of the commands "prefix" allows you to change the prefix alice uses to respond to commands. Once set, alice will only respond to this prefix so make sure not to forget it.
 
-Another command that needs some explanation is the "open" command. When a tournament is ongoing in a channel, alice will remove all commands entered in that channel to keep the chat clean. However, if you decide not to complete the tournament alice will not be aware of this and will continue to block commands. In that case, admins can use !open to forcibly end the tournament.
+Another command that needs some explanation is the "open" command. When a tournament is ongoing in a channel, alice will remove all commands entered in that channel to keep the chat clean. However, if you decide not to complete the tournament, alice will not be aware of this and will continue to block commands. In that case, admins can use !open to forcibly end the tournament.
 
 Something to note is that all channels are disabled by default other than the one alice sends the hello message in. Use !enable if you'd like to use commands in other channels.
