@@ -48,7 +48,7 @@ class Tournament(commands.Cog):
         match_result = [f'**{participants_dict[participant]}**' if participant == match[winner_index] else participants_dict[participant] for participant in match]
         return '  vs.  '.join(match_result)
 
-    async def round_robin(self, channel, author, participants_dict, participant_ids, tournament_name):
+    async def round_robin(self, channel, author, participants_dict, permitted_voters, participant_ids, tournament_name):
         footer_text = f'Hosted by {author.display_name}  \u2022  '
         avatar_url = author.avatar_url
 
@@ -73,7 +73,7 @@ class Tournament(commands.Cog):
             for j in range(len(matches)):
                 player1 = matches[j][0]
                 player2 = matches[j][1]
-                embed = self.manager.create_embed('Match', f'<@{player1}>  vs.  <@{player2}>', self.round_robin_color, '', 
+                embed = self.manager.create_embed('Match', f'{self.match_reactions[0]} <@{player1}>  vs.  <@{player2}> {self.match_reactions[1]}', self.round_robin_color, '', 
                     ['Wins'], [f'{participants_dict[player1]}: {wins_log[matches[j][0]]}\n{participants_dict[player2]}: {wins_log[matches[j][1]]}'],
                     footer=[footer_text+self.manager.current_time(), avatar_url], sign_embed=False)
                 bot_message = await channel.send(embed=embed)
@@ -84,13 +84,16 @@ class Tournament(commands.Cog):
                     await bot_message.add_reaction(emote)
             
             while not round_complete:
-                await self.user_reaction_on_message(self.match_reactions, [int(participant_id) for participant_id in participant_ids], 
+                await self.user_reaction_on_message(self.match_reactions, list(map(int, permitted_voters)), 
                     bot_messages, timeout=3600, channel_to_open=channel)
                 cache_messages = await self.get_cache(channel, bot_messages)
                 match_votes = []
                 for message in cache_messages:
-                    match_votes.append([reaction.count for reaction in message.reactions])
-                
+                    counts = []
+                    for reaction in message.reactions:
+                        if str(reaction) in self.match_reactions:
+                            counts.append(len([user.id for user in await reaction.users().flatten() if int(user.id) in list(map(int, permitted_voters))]))
+                    match_votes.append(counts)
                 round_complete = all(len(set(match)) > 1 for match in match_votes)
             
             for j in range(len(matches)):
@@ -122,7 +125,7 @@ class Tournament(commands.Cog):
 
         return participants_dict, wins_log
 
-    async def bracket(self, channel, author, participants_dict, ranked_participants, tournament_name, game_name, tournament_type):
+    async def bracket(self, channel, author, participants_dict, permitted_voters, ranked_participants, tournament_name, game_name, tournament_type):
         footer_text = f'Hosted by {author.display_name}  \u2022  '
         avatar_url = author.avatar_url
 
@@ -134,8 +137,7 @@ class Tournament(commands.Cog):
         tournament_url = tournament.create_tournament()
          # skip two characters to offset for the 'id' prefix
         tournament_participants = dict([(participant['id'], participant['misc'][2:]) for participant in tournament.fetch_participants()])
-        print(tournament_participants)
-
+        
         formatted_date = datetime.now().strftime('%B %d, %Y | %I:%M %p')
         embed = self.manager.create_embed(f'{tournament_type.title()} Bracket', f'{tournament_name} \u2022 {formatted_date}', self.bracket_color, 
             'attachment://challonge.png', [], [], footer=[footer_text+self.manager.current_time(), avatar_url], url=f'https://challonge.com/{tournament_url}')
@@ -157,7 +159,7 @@ class Tournament(commands.Cog):
             for i in range(len(matches)):
                 player1 = str(tournament_participants[round_players[i][0]])
                 player2 = str(tournament_participants[round_players[i][1]])
-                embed = self.manager.create_embed('Match', f'<@{player1}>  vs.  <@{player2}>', self.bracket_color, '', ['Wins'], 
+                embed = self.manager.create_embed('Match', f'{self.match_reactions[0]} <@{player1}>  vs.  <@{player2}> {self.match_reactions[1]}', self.bracket_color, '', ['Wins'], 
                     [f'{participants_dict[player1]}: {wins_log[player1]}\n{participants_dict[player2]}: {wins_log[player2]}'], 
                     footer=[footer_text+self.manager.current_time(), avatar_url], sign_embed=False)
                 bot_message = await channel.send(embed=embed)
@@ -167,13 +169,16 @@ class Tournament(commands.Cog):
                     await bot_message.add_reaction(emote)
 
             while not round_complete:
-                await self.user_reaction_on_message(self.match_reactions, [int(participant_id) for participant_id in participant_ids], 
+                await self.user_reaction_on_message(self.match_reactions, list(map(int, permitted_voters)), 
                     bot_messages, timeout=3600, channel_to_open=channel)
                 cache_messages = await self.get_cache(channel, bot_messages)
                 match_votes = []
                 for message in cache_messages:
-                    match_votes.append([reaction.count for reaction in message.reactions])
-
+                    counts = []
+                    for reaction in message.reactions:
+                        if str(reaction) in self.match_reactions:
+                            counts.append(len([user.id for user in await reaction.users().flatten() if int(user.id) in list(map(int, permitted_voters))]))
+                    match_votes.append(counts)
                 round_complete = all(len(set(match)) > 1 for match in match_votes)
 
             for i in range(len(matches)):
@@ -223,7 +228,8 @@ class Tournament(commands.Cog):
         channel = ctx.channel
         author = ctx.author
 
-        tournament_name = ctx.message.content[len(ctx.prefix+ctx.invoked_with):].strip()
+        command_args = [arg.strip() for arg in ctx.message.content[len(ctx.prefix+ctx.invoked_with):].split(',')]
+        tournament_name = command_args[0]
 
         footer_text = f'Hosted by {author.display_name}  \u2022  '
         avatar_url = author.avatar_url
@@ -238,9 +244,6 @@ class Tournament(commands.Cog):
         bot_prompt_message = await channel.fetch_message(bot_prompt_message.id)
         participants = [member if isinstance(member, discord.Member) else await channel.guild.fetch_member(member.id) 
                         async for member in bot_prompt_message.reactions[0].users(limit=65)][1:]
-        participants.append(await channel.guild.fetch_member(750868970659119214)) # TEST
-        participants.append(await channel.guild.fetch_member(723813871881551932)) # TEST
-        participants.append(await channel.guild.fetch_member(218561502968283137)) # TEST
         if len(participants) < 2:
             bot_error_message = await channel.send(f'*Need more players to start the round-robin, restarting...*')
             await asyncio.sleep(3)
@@ -252,13 +255,18 @@ class Tournament(commands.Cog):
         participant_ids = list(participants_dict.keys())
         random.shuffle(participant_ids)
 
+        try:
+            permitted_voters = [author.id] if (command_args[1] == 'true' or command_args[1] == 'yes') else participant_ids
+        except:
+            permitted_voters = participant_ids
+
         channel_occupied_role = self.manager.get_role_by_name(ctx.guild, 'alice tournament')
         channel_occupied = channel.overwrites_for(channel_occupied_role).pair()[0]
         # secondary check to verify another tournament hasn't started between command call and participant entry time
         if channel_occupied.read_messages and channel_occupied.send_messages:
             await channel.set_permissions(channel_occupied_role, read_messages=False, send_messages=False)
 
-            await self.round_robin(channel, author, participants_dict, participant_ids, tournament_name)
+            await self.round_robin(channel, author, participants_dict, permitted_voters, participant_ids, tournament_name)
 
             await channel.set_permissions(channel_occupied_role, read_messages=True, send_messages=True)
             
@@ -281,7 +289,7 @@ class Tournament(commands.Cog):
         command_args = [arg.strip() for arg in ctx.message.content[len(ctx.prefix+ctx.invoked_with):].split(',')]
         tournament_name, game_name = command_args[0], command_args[1]
         try:
-            tournament_type = 'single elimination' if (command_args[2] == 'se' or command_args[2] == 'single elimination') else 'double elimination'
+            tournament_type = 'single elimination' if (command_args[2].lower() == 'se' or command_args[2].lower() == 'single elimination') else 'double elimination'
         except:
             tournament_type = 'double elimination'
 
@@ -310,13 +318,21 @@ class Tournament(commands.Cog):
         random.shuffle(participant_ids)
         ranked_participants = dict.fromkeys(participant_ids, 0)
 
+        try:
+            permitted_voters = [author.id] if (command_args[3].lower() == 'true' or command_args[3].lower() == 'yes') else participant_ids
+        except:
+            try:
+                permitted_voters = [author.id] if (command_args[2].lower() == 'true' or command_args[2].lower() == 'yes') else participant_ids
+            except:
+                permitted_voters = participant_ids
+
         channel_occupied_role = self.manager.get_role_by_name(ctx.guild, 'alice tournament')
         channel_occupied = channel.overwrites_for(channel_occupied_role).pair()[0]
         # secondary check to verify another tournament hasn't started between command call and participant entry time
         if channel_occupied.read_messages and channel_occupied.send_messages:
             await channel.set_permissions(channel_occupied_role, read_messages=False, send_messages=False)
 
-            await self.bracket(channel, author, participants_dict, ranked_participants, tournament_name, game_name, tournament_type)
+            await self.bracket(channel, author, participants_dict, permitted_voters, ranked_participants, tournament_name, game_name, tournament_type)
 
             await channel.set_permissions(channel_occupied_role, read_messages=True, send_messages=True)
             
@@ -339,7 +355,7 @@ class Tournament(commands.Cog):
         command_args = [arg.strip() for arg in ctx.message.content[len(ctx.prefix+ctx.invoked_with):].split(',')]
         tournament_name, game_name = command_args[0], command_args[1]
         try:
-            tournament_type = 'single elimination' if (command_args[2] == 'se' or command_args[2] == 'single elimination') else 'double elimination'
+            tournament_type = 'single elimination' if (command_args[2].lower() == 'se' or command_args[2].lower() == 'single elimination') else 'double elimination'
         except:
             tournament_type = 'double elimination'
 
@@ -367,14 +383,22 @@ class Tournament(commands.Cog):
         participant_ids = list(participants_dict.keys())
         random.shuffle(participant_ids)
 
+        try:
+            permitted_voters = [author.id] if (command_args[3].lower() == 'true' or command_args[3].lower() == 'yes') else participant_ids
+        except:
+            try:
+                permitted_voters = [author.id] if (command_args[2].lower() == 'true' or command_args[2].lower() == 'yes') else participant_ids
+            except:
+                permitted_voters = participant_ids
+
         channel_occupied_role = self.manager.get_role_by_name(ctx.guild, 'alice tournament')
         channel_occupied = channel.overwrites_for(channel_occupied_role).pair()[0]
         # secondary check to verify another tournament hasn't started between command call and participant entry time
         if channel_occupied.read_messages and channel_occupied.send_messages:
             await channel.set_permissions(channel_occupied_role, read_messages=False, send_messages=False)
 
-            participants_dict, ranked_participants = await self.round_robin(channel, author, participants_dict, participant_ids, tournament_name)
-            await self.bracket(channel, author, participants_dict, ranked_participants, tournament_name, game_name, tournament_type)
+            participants_dict, ranked_participants = await self.round_robin(channel, author, participants_dict, permitted_voters, participant_ids, tournament_name)
+            await self.bracket(channel, author, participants_dict, permitted_voters, ranked_participants, tournament_name, game_name, tournament_type)
 
             await channel.set_permissions(channel_occupied_role, read_messages=True, send_messages=True)
             

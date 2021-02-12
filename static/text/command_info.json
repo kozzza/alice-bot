@@ -62,11 +62,12 @@
             "tourney"
         ],
         "description": "Creates a tournament with a round-robin followed by a seeded bracket on Challonge",
-        "usage": "tournament <name>, <game>, <type (optional)>",
+        "usage": "tournament <name>, <game>, <type (optional)>, <strict_voting (optional)>",
         "restraints": [
             "<name> cannot include commas",
             "<game> cannot include commas and might not be recognized if it isn't well known",
-            "<type (optional)> must either be se for single elimination or de for double elimination (default: double elimination)"
+            "<type (optional)> must either be se for single elimination or de for double elimination (default: double elimination)",
+            "<strict_voting (optional)> must either be true for registering strictly the host's votes or false for registering any particpant's votes (default: false)"
         ],
         "example": "tournament alice's tourney, mario kart"
     },
@@ -76,23 +77,25 @@
             "rr"
         ],
         "description": "Creates a round-robin competition on your Discord server",
-        "usage": "roundrobin <name>",
+        "usage": "roundrobin <name>, <strict_voting (optional)>",
         "restraints": [
-            "<name> None"
+            "<name> None",
+            "<strict_voting (optional)> must either be true for registering strictly the host's votes or false for registering any particpant's votes (default: false)"
         ],
-        "example": "roundrobin alice's round-robin"
+        "example": "roundrobin alice's round-robin, true"
     },
     "bracket": {
         "aliases": [
             "bracket"
         ],
         "description": "Creates a bracket on Challonge using predetermined seeds",
-        "usage": "bracket <name>, <game>, <type (optional)>",
+        "usage": "bracket <name>, <game>, <type (optional)>, <strict_voting (optional)>",
         "restraints": [
             "<name> cannot include commas",
             "<game> cannot include commas and might not be recognized if it isn't well known",
-            "<type (optional)> must either be se for single elimination or de for double elimination (default: double elimination)"
+            "<type (optional)> must either be se for single elimination or de for double elimination (default: double elimination)",
+            "<strict_voting (optional)> must either be true for registering strictly the host's votes or false for registering any particpant's votes (default: false)"
         ],
-        "example": "bracket alice's bracket, mario kart, se"
+        "example": "bracket alice's bracket, mario kart, se, true"
     }
 }
