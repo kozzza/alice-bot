@@ -22,7 +22,10 @@ async def get_prefix(bot, message):
 	
 	return commands.when_mentioned_or(*prefix)(bot, message)
 
-bot = commands.Bot(command_prefix=get_prefix, case_insensitive=True)
+intents = discord.Intents.default()
+intents.members = True
+
+bot = commands.Bot(command_prefix=get_prefix, case_insensitive=True, intents=intents)
 bot.remove_command('help')
 
 # add sql_query attribute to bot object as not to initialize a new pool for every cog
