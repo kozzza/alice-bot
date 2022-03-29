@@ -24,7 +24,7 @@ class Tournament(commands.Cog):
         self.bracket_color = 0x0064FF
         
 
-    async def user_reaction_on_message(self, desired_reactions, desired_user_ids, desired_messages, timeout=120, delete_on_timeout=False, channel_to_open=None):
+    async def user_reaction_on_message(self, desired_reactions, desired_user_ids, desired_messages, timeout=300, delete_on_timeout=False, channel_to_open=None):
         def check(reaction, user):
             return user.id in desired_user_ids and str(reaction.emoji) in desired_reactions and reaction.message.id in [message.id for message in desired_messages]
         try:
